@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enfermera Ingrid Arriagada Muñoz - Cuidado Profesional y Humanizado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Paleta de Colores:
+            - Fondo: #F7F7F9 (Blanco Roto)
+            - Principal: #2C3E50 (Azul Marino Suave)
+            - Acento 1: #1ABC9C (Turquesa/Verde Agua)
+            - Acento 2: #E7C6FF (Lavanda Suave)
+        */
+
+        :root {
+            --color-fondo: #F7F7F9;
+            --color-principal: #2C3E50;
+            --color-acento1: #1ABC9C;
+            --color-acento2: #E7C6FF;
+            --color-texto-claro: white;
+            --color-topbar: #34495E; /* Azul más oscuro */
+        }
+
+        /* Estilos Generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-fondo);
+            color: var(--color-principal);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 {
+            color: var(--color-principal);
+            text-align: center;
+        }
+
+        section {
+            padding: 80px 5%;
+            text-align: center;
+        }
+        
+        /* ------------------------------------------- */
+        /* CABECERA AVANZADA (HEADER DOBLE)            */
+        /* ------------------------------------------- */
+
+        .header-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Top Bar */
+        .topbar {
+            background-color: var(--color-topbar); 
+            color: var(--color-texto-claro);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+        }
+        
+        .topbar-info a {
+            color: var(--color-texto-claro);
+            text-decoration: none;
+            margin-right: 20px;
+            transition: color 0.3s;
+        }
+
+        .topbar-info a i {
+            margin-right: 5px;
+        }
+
+        .cta-topbar {
+            background-color: var(--color-acento1);
+            color: var(--color-texto-claro);
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-topbar:hover {
+            background-color: #16A085;
+        }
+
+
+        /* Main Bar (Navegación Formal) */
+        .navbar {
+            background-color: var(--color-texto-claro);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--color-principal);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--color-acento1);
+        }
+
+        .nav-links {
+            display: flex; /* Por defecto visible en escritorio */
+        }
+        
+        .nav-links a {
+            color: var(--color-principal);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-acento1);
+            border-bottom: 2px solid var(--color-acento1);
+        }
+        
+        /* Icono de menú hamburguesa (oculto en escritorio) */
+        .menu-toggle {
+            display: none; 
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--color-principal);
+        }
+        
+        /* ------------------------------------------- */
+        /* SECCIONES Y CONTENIDO (se mantienen igual)  */
+        /* ------------------------------------------- */
+
+        /* Sección HERO */
+        #inicio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        .hero-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--color-acento2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        #inicio h1 {
+            font-size: 2.8em;
+            margin-bottom: 5px;
+        }
+
+        #inicio h2 {
+            font-size: 1.5em;
+            color: var(--color-acento1);
+            font-weight: 400;
+            margin-top: 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--color-acento1);
+            color: var(--color-texto-claro);
+            padding: 15px 30px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 50px;
+            margin-top: 25px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #16A085;
+            transform: translateY(-2px);
+        }
+
+        /* Sección Quién Soy (Credenciales) */
+        #quien-soy { background-color: white; }
+        .credenciales {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .credencial-item {
+            text-align: center;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background-color: var(--color-fondo);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            font-weight: bold;
+            color: var(--color-principal);
+        }
+        .credencial-item:nth-child(1) { color: var(--color-acento1); } 
+        .credencial-item:nth-child(3) { background-color: var(--color-acento2); color: var(--color-principal); } 
+
+        /* Sección Servicios */
+        #servicios { background-color: var(--color-fondo); }
+        .servicios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .servicio-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+            text-align: left;
+            border-top: 5px solid var(--color-acento1);
+        }
+        .servicio-card:hover { transform: translateY(-5px); }
+        .servicio-card i {
+            font-size: 2.5em;
+            color: var(--color-acento1);
+            margin-bottom: 15px;
+        }
+        
+        /* Sección Testimonios */
+        #testimonios { background-color: var(--color-acento2); color: var(--color-principal); }
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .testimonial {
+            background-color: var(--color-texto-claro);
+            padding: 25px;
+            border-radius: 10px;
+            font-style: italic;
+            text-align: left;
+            border-left: 5px solid var(--color-acento1);
+        }
+
+        /* Sección Contacto */
+        #contacto { background-color: white; padding-bottom: 40px; }
+        .contact-content {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .contact-form, .contact-info {
+            flex: 1;
+            min-width: 300px;
+            max-width: 450px;
+            text-align: left;
+        }
+        .contact-form input, .contact-form textarea {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            background-color: var(--color-fondo);
+        }
+        .contact-info i {
+            color: var(--color-acento1);
+            margin-right: 10px;
+        }
+        .contact-info a {
+            color: var(--color-principal); 
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        /* Pie de Página */
+        footer {
+            background-color: var(--color-principal);
+            color: var(--color-texto-claro);
+            text-align: center;
+            padding: 25px 5%;
+            font-size: 0.9em;
+        }
+        .social-icons a {
+            color: var(--color-texto-claro);
+            font-size: 1.5em;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        /* ================================================= */
+        /* MEDIA QUERIES (ESTÉTICA Y MENÚ EN MÓVILES)      */
+        /* ================================================= */
+        @media (max-width: 768px) {
+            
+            section {
+                padding: 40px 5%; 
+            }
+            
+            /* Top Bar Móvil */
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+            }
+            .topbar-info {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 10px;
+                gap: 5px;
+                width: 100%;
+            }
+            .cta-topbar {
+                width: 100%; 
+                text-align: center;
+            }
+
+            /* Navegación Principal Móvil */
+            .menu-toggle {
+                display: block; /* Muestra el icono de hamburguesa */
+            }
+            .nav-links {
+                /* OCULTAR MENÚ por defecto en móviles */
+                display: none; 
+                flex-direction: column;
+                position: absolute;
+                top: 100%; /* Debajo de la navbar */
+                left: 0;
+                width: 100%;
+                background-color: var(--color-texto-claro);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                padding: 10px 0;
+            }
+            
+            /* Estado activo del menú (clase añadida por JS) */
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a {
+                margin: 0;
+                padding: 10px 20px;
+                width: 100%;
+                border-bottom: none;
+                text-align: left;
+            }
+
+            /* HERO */
+            #inicio h1 { font-size: 1.8em; }
+            #inicio h2 { font-size: 1.1em; padding: 0 10px; }
+
+            /* Credenciales y Contacto */
+            .credenciales { flex-direction: column; }
+            .credencial-item { width: 90%; margin: 0 auto; }
+            .contact-content { flex-direction: column; align-items: center; }
+            .contact-form, .contact-info { width: 100%; max-width: 90%; text-align: center; }
+            .contact-form { order: 2; }
+            .contact-info { order: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-container">
+        
+        <div class="topbar">
+            <div class="topbar-info">
+                <a href="tel:[NÚMERO SIN ESPACIOS]"><i class="fas fa-phone-alt"></i> Llámanos: **[NÚMERO DE TELÉFONO]**</a>
+                <a href="mailto:[CORREO]"><i class="fas fa-envelope"></i> **[CORREO ELECTRÓNICO]**</a>
+            </div>
+            <a href="https://wa.me/[NÚMERO SIN SIGNOS]" target="_blank" class="cta-topbar"><i class="fab fa-whatsapp"></i> Agenda tu Cita Vía WhatsApp</a>
+        </div>
+        
+        <nav class="navbar">
+            <a href="#inicio" class="logo">
+                <i class="fas fa-user-nurse" style="color: var(--color-acento1);"></i> Enf. <span>Ingrid</span> Arriagada
+            </a>
+            
+            <div class="nav-links" id="menu-links">
+                <a href="#quien-soy">Quién Soy</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#testimonios">Opiniones</a>
+                <a href="#contacto">Contacto</a>
+                <a href="[ENLACE BLOG/RECURSOS]" style="color: var(--color-acento1); margin-left: 40px;">Recursos en Salud</a>
+            </div>
+            
+            <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <section id="inicio">
+        <div class="hero-content">
+            <img src="[URL/PATH DE LA FOTO PROFESIONAL DE INGRID ARRIAGADA MUÑOZ]" alt="Foto de la Enfermera Ingrid Arriagada Muñoz" class="hero-img">
+            <h1>ENFERMERA INGRID ARRIAGADA MUÑOZ</h1>
+            <h2>Tu Cuidado y Bienestar en Manos de una Experta en **[ESPECIALIDAD/ÁREA DE FOCO]**.</h2>
+            <a href="#contacto" class="cta-button">Agenda tu Hora Ahora</a>
+        </div>
+    </section>
+    
+    <section id="quien-soy">
+        <h2><i class="fas fa-user-nurse" style="color: var(--color-acento1);"></i> ¿Quién está a cargo de tu salud?</h2>
+        <p style="max-width: 800px; margin: 20px auto 40px; font-size: 1.1em;">
+            Soy **Ingrid Arriagada Muñoz**, Enfermera Universitaria con **[NÚMERO]** años de experiencia dedicada a **[Mencionar un área clave: ej. la atención domiciliaria y el cuidado integral del adulto mayor]**. Mi misión es **[Una frase que resuma su propósito: ej. proporcionar cuidados humanizados y basados en la evidencia, con empatía y excelencia]**.
+        </p>
+        
+        <div class="credenciales">
+            <div class="credencial-item">
+                <i class="fas fa-graduation-cap"></i> <br> **[UNIVERSIDAD DONDE ESTUDIÓ]**
+            </div>
+            <div class="credencial-item">
+                <i class="fas fa-id-card"></i> <br> **REG. PROFESIONAL: [NÚMERO CÉDULA/REGISTRO]**
+            </div>
+            <div class="credencial-item">
+                <i class="fas fa-certificate"></i> <br> **Certificación/Diplomado en [ÁREA RELEVANTE]**
+            </div>
+        </div>
+    </section>
+
+    <section id="servicios">
+        <h2><i class="fas fa-hand-holding-medical" style="color: var(--color-acento1);"></i> Servicios de Enfermería Domiciliaria e Integral</h2>
+        <div class="servicios-grid">
+            
+            <div class="servicio-card">
+                <i class="fas fa-home"></i>
+                <h3>Atención Domiciliaria Integral</h3>
+                <p>**[Detalle el servicio: ej. Control de signos vitales, administración de medicamentos (inyecciones y vía oral), monitoreo de pacientes.]**</p>
+            </div>
+
+            <div class="servicio-card">
+                <i class="fas fa-band-aid"></i>
+                <h3>Control de Crónicos y Curaciones</h3>
+                <p>**[Detalle: ej. Manejo de pacientes diabéticos e hipertensos, curaciones de heridas complejas, manejo de úlceras por presión (escaras).]**</p>
+            </div>
+
+            <div class="servicio-card">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>Asesoría y Educación en Salud</h3>
+                <p>**[Detalle: ej. Capacitación a cuidadores, guía sobre hábitos saludables, planificación de cuidados post-hospitalarios (alta).]**</p>
+            </div>
+            
+            <div class="servicio-card">
+                <i class="fas fa-syringe"></i>
+                <h3>**[OTRO SERVICIO CLAVE, EJ. Administración de Sueros]**</h3>
+                <p>**[Detalle el servicio especial que ofrece, si aplica. Un cuidado profesional con un toque de calidez.]**</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonios">
+        <h2><i class="fas fa-quote-left" style="color: var(--color-principal);"></i> La Confianza de Mis Pacientes</h2>
+        <div class="testimonial-container">
+            <blockquote class="testimonial">
+                <p>"**[TESTIMONIO 1: Frase poderosa sobre la calidad de su cuidado o empatía.]** Su profesionalismo es impecable." </p>
+                <footer>– **[Nombre del Paciente/Familiar]**, [Ciudad/Comuna].</footer>
+            </blockquote>
+            
+            <blockquote class="testimonial">
+                <p>"**[TESTIMONIO 2: Frase enfocada en su profesionalismo y resultados.]** Es un alivio saber que mi familiar está en manos tan competentes y amables."</p>
+                <footer>– **[Nombre del Paciente/Familiar]**, [Ciudad/Comuna].</footer>
+            </blockquote>
+            
+            <blockquote class="testimonial">
+                <p>"**[TESTIMONIO 3: Frase sobre la tranquilidad que genera su presencia.]** Su trato es siempre cercano y su experiencia se nota en cada detalle."</p>
+                <footer>– **[Nombre del Paciente/Familiar]**, [Ciudad/Comuna].</footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <section id="contacto">
+        <h2><i class="fas fa-phone-alt" style="color: var(--color-acento1);"></i> Agenda tu Cuidado</h2>
+        <p style="font-size: 1.2em;">Comunícate directamente para solicitar una visita o asesoría.</p>
+        
+        <div class="contact-content">
+            
+            <div class="contact-form">
+                <h3>Formulario de Consulta</h3>
+                <form action="https://www.reddit.com/r/elementor/comments/1cy2wjb/form_returning_server_error/?tl=es-419" method="POST">
+                    <input type="text" name="nombre" placeholder="Nombre Completo" required>
+                    <input type="tel" name="telefono" placeholder="Teléfono de Contacto" required>
+                    <input type="email" name="email" placeholder="Correo Electrónico" required>
+                    <textarea name="mensaje" rows="5" placeholder="Cuéntame brevemente el motivo de tu consulta..." required></textarea>
+                    <button type="submit" class="cta-button" style="width: 100%;">Enviar Consulta</button>
+                </form>
+            </div>
+            
+            <div class="contact-info">
+                <h3>Datos de Contacto</h3>
+                <p><i class="fas fa-phone"></i> **Teléfono:** <a href="tel:[NÚMERO SIN ESPACIOS]">[NÚMERO DE TELÉFONO DE INGRID]</a></p>
+                <p><i class="fas fa-envelope"></i> **Email:** <a href="mailto:[CORREO]">[CORREO ELECTRÓNICO PROFESIONAL]</a></p>
+                <p><i class="far fa-clock"></i> **Horario de Atención:** **[HORARIO Y DÍAS DISPONIBLES]**</p>
+                <p><i class="fas fa-map-marker-alt"></i> **Área de Cobertura:** **[ÁREA GEOGRÁFICA DONDE OFRECE SERVICIOS]**</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-icons">
+            <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://wa.me/[NÚMERO SIN SIGNOS]" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p style="margin-top: 10px;">&copy; 2025 Enfermera Ingrid Arriagada Muñoz. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').onclick = function() {
+            var navLinks = document.getElementById('menu-links');
+            // Toggle de la clase 'active' para mostrar/ocultar el menú
+            navLinks.classList.toggle('active');
+        };
+
+        // Opcional: Cerrar menú al hacer clic en un enlace (para móviles)
+        var links = document.querySelectorAll('.nav-links a');
+        for (var i = 0; i < links.length; i++) {
+            links[i].addEventListener('click', function() {
+                document.getElementById('menu-links').classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>
