@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enfermera Ingrid Arriagada Muñoz - Cuidado Profesional y Humanizado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <style>
         /* Paleta de Colores:
             - Fondo: #F7F7F9 (Blanco Roto)
@@ -32,6 +34,62 @@
             color: var(--color-principal);
             line-height: 1.6;
             scroll-behavior: smooth;
+        }
+        #horariosDisponibles {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-height: 80%;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        .bloqueHora {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: 700;
+            padding: 12px 10px;
+            cursor: pointer;
+            transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .bloqueHora:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+        }
+        .horaLibre {
+            background-color: #26a269;
+            color: #fff;
+        }
+        .horaOcupada {
+            background-color: #e74c3c;
+            color: #fff;
+            cursor: default;
+        }
+        #botones-toggle-horas {
+            max-height: 40vh;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        .toggle-hora {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease;
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .toggle-hora.activo {
+            background-color: #26a269;
+            color: #fff;
+        }
+        .toggle-hora:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.18);
         }
 
         h1, h2, h3 {
@@ -372,6 +430,136 @@
             .contact-form { order: 2; }
             .contact-info { order: 1; }
         }
+        .modalAgenda {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: -10px;
+            width: 100%;
+            height: 900px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modalAgenda.activa { display: block; }
+        .contenidoModalAgenda {
+            background-color: #fff;
+            color: var(--color-principal);
+            margin: 5% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .cerrarModalAgenda {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        #cuadroCalendario {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .diaCalendario {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            background: var(--color-fondo);
+            border: 1px solid #ddd;
+        }
+        .diaLibre { background: green; color: #fff;border: 1px solid #000;}
+.diaPasado{
+    background-color: #ccc !important;
+    color: #000 !important;
+}
+        .diaOcupado {border: 1px solid #000; background: red; color: #fff !important;}
+        .diaBloqueado {border: 1px solid #000; background: red; color: #fff !important;}
+        .dias-semana {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+            color: var(--color-principal);
+            font-weight: 700;
+        }
+        .dias-semana div {
+            padding: 6px 0;
+            border-radius: 6px;
+            background: var(--color-fondo);
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .modalBarberia {
+            display: none;
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .contenidoModal {
+            background-color: #fff;
+            color: var(--color-principal);
+            margin: 8% auto;
+            padding: 20px;
+            width: 90%;
+            height: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            border: 1px solid #000;
+        }
+        .cerrarModal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .bloqueHora {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 6px 0;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+
+        .horaLibre { background: var(--color-acento1); color: var(--color-texto-claro); }
+        .horaOcupada { background: #ff4d4d; color: var(--color-texto-claro); }
+        .contenidoModal input {
+            width: 100%;
+            margin: 6px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08) inset;
+            color: var(--color-principal);
+            background: var(--color-fondo);
+        }
+        .contenidoModal .cta-button,
+        .contenidoModalAgenda .cta-button {
+            border: 1px solid #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        #modal-hora-personalizada .contenidoModal {
+            background: linear-gradient(180deg, #ffffff, #f7f7f9);
+            border: 1px solid #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+        }
     </style>
 </head>
 <body>
@@ -379,12 +567,23 @@
     <header class="header-container">
         
         <div class="topbar">
-            <div class="topbar-info">
-                <a href="tel:[NÚMERO SIN ESPACIOS]"><i class="fas fa-phone-alt"></i> Llámanos: **[NÚMERO DE TELÉFONO]**</a>
-                <a href="mailto:[CORREO]"><i class="fas fa-envelope"></i> **[CORREO ELECTRÓNICO]**</a>
-            </div>
-            <a href="https://wa.me/[NÚMERO SIN SIGNOS]" target="_blank" class="cta-topbar"><i class="fab fa-whatsapp"></i> Agenda tu Cita Vía WhatsApp</a>
-        </div>
+    <div class="topbar-info">
+        <!-- Teléfono en formato internacional -->
+        <a href="tel:+56930273353">
+            <i class="fas fa-phone-alt"></i> Llámanos: +56 9 3027 3353
+        </a>
+        
+        <!-- Correo electrónico -->
+        <a href="mailto:ingridcarola1973@gmail.com">
+            <i class="fas fa-envelope"></i> ingridcarola1973@gmail.com
+        </a>
+    </div>
+    
+    <!-- WhatsApp con número en formato internacional sin espacios ni signos -->
+    <a href="https://wa.me/56930273353" target="_blank" class="cta-topbar" id="btn-whatsapp">
+        <i class="fab fa-whatsapp"></i> Agenda tu Cita Vía WhatsApp
+    </a>
+</div>
         
         <nav class="navbar">
             <a href="#inicio" class="logo">
@@ -405,62 +604,104 @@
 
     <section id="inicio">
         <div class="hero-content">
-            <img src="[URL/PATH DE LA FOTO PROFESIONAL DE INGRID ARRIAGADA MUÑOZ]" alt="Foto de la Enfermera Ingrid Arriagada Muñoz" class="hero-img">
-            <h1>ENFERMERA INGRID ARRIAGADA MUÑOZ</h1>
-            <h2>Tu Cuidado y Bienestar en Manos de una Experta en **[ESPECIALIDAD/ÁREA DE FOCO]**.</h2>
-            <a href="#contacto" class="cta-button">Agenda tu Hora Ahora</a>
+            <img src="P1000020al2.JPG" alt="Foto de la Enfermera Ingrid Arriagada Muñoz" class="hero-img">
+            <h1>ENFERMERA <br>INGRID ARRIAGADA MUÑOZ</h1>
+            <h2>Tu Cuidado y Bienestar</h2>
+            <a href="#contacto" class="cta-button" id="btn-agendar-hero">Agendar Hora</a>
         </div>
     </section>
     
-    <section id="quien-soy">
-        <h2><i class="fas fa-user-nurse" style="color: var(--color-acento1);"></i> ¿Quién está a cargo de tu salud?</h2>
-        <p style="max-width: 800px; margin: 20px auto 40px; font-size: 1.1em;">
-            Soy **Ingrid Arriagada Muñoz**, Enfermera Universitaria con **[NÚMERO]** años de experiencia dedicada a **[Mencionar un área clave: ej. la atención domiciliaria y el cuidado integral del adulto mayor]**. Mi misión es **[Una frase que resuma su propósito: ej. proporcionar cuidados humanizados y basados en la evidencia, con empatía y excelencia]**.
-        </p>
-        
-        <div class="credenciales">
-            <div class="credencial-item">
-                <i class="fas fa-graduation-cap"></i> <br> **[UNIVERSIDAD DONDE ESTUDIÓ]**
-            </div>
-            <div class="credencial-item">
-                <i class="fas fa-id-card"></i> <br> **REG. PROFESIONAL: [NÚMERO CÉDULA/REGISTRO]**
-            </div>
-            <div class="credencial-item">
-                <i class="fas fa-certificate"></i> <br> **Certificación/Diplomado en [ÁREA RELEVANTE]**
-            </div>
-        </div>
-    </section>
+ 
+<section id="servicios">
+  <h2>
+    <i class="fas fa-hand-holding-medical" style="color: var(--color-acento1);"></i>
+    Servicios de Enfermería Domiciliaria e Integral
+  </h2>
 
-    <section id="servicios">
-        <h2><i class="fas fa-hand-holding-medical" style="color: var(--color-acento1);"></i> Servicios de Enfermería Domiciliaria e Integral</h2>
-        <div class="servicios-grid">
-            
-            <div class="servicio-card">
-                <i class="fas fa-home"></i>
-                <h3>Atención Domiciliaria Integral</h3>
-                <p>**[Detalle el servicio: ej. Control de signos vitales, administración de medicamentos (inyecciones y vía oral), monitoreo de pacientes.]**</p>
-            </div>
+  <div class="servicios-grid">
+    
+    <!-- Tratamiento de heridas -->
+    <div class="servicio-card">
+      <i class="fas fa-band-aid servicio-icon"></i>
+      <h3>Tratamiento de Heridas</h3>
+      <p>
+        Manejo especializado de pie diabético, úlceras venosas, úlceras por presión y quemaduras,
+        aplicando protocolos seguros para favorecer la recuperación y prevenir complicaciones.
+      </p>
+    </div>
 
-            <div class="servicio-card">
-                <i class="fas fa-band-aid"></i>
-                <h3>Control de Crónicos y Curaciones</h3>
-                <p>**[Detalle: ej. Manejo de pacientes diabéticos e hipertensos, curaciones de heridas complejas, manejo de úlceras por presión (escaras).]**</p>
-            </div>
+    <!-- Procedimientos menores -->
+    <div class="servicio-card">
+      <i class="fas fa-cut servicio-icon"></i>
+      <h3>Procedimientos Menores</h3>
+      <p>
+        Retiro de puntos de sutura realizado con técnicas seguras y cuidadosas para garantizar
+        una correcta cicatrización.
+      </p>
+    </div>
 
-            <div class="servicio-card">
-                <i class="fas fa-chalkboard-teacher"></i>
-                <h3>Asesoría y Educación en Salud</h3>
-                <p>**[Detalle: ej. Capacitación a cuidadores, guía sobre hábitos saludables, planificación de cuidados post-hospitalarios (alta).]**</p>
-            </div>
-            
-            <div class="servicio-card">
-                <i class="fas fa-syringe"></i>
-                <h3>**[OTRO SERVICIO CLAVE, EJ. Administración de Sueros]**</h3>
-                <p>**[Detalle el servicio especial que ofrece, si aplica. Un cuidado profesional con un toque de calidez.]**</p>
-            </div>
-        </div>
-    </section>
+    <!-- Manejo de dispositivos médicos -->
+    <div class="servicio-card">
+      <i class="fas fa-stethoscope servicio-icon"></i>
+      <h3>Manejo de Dispositivos Médicos</h3>
+      <ul>
+        <li>Cambio de sonda</li>
+        <li>Instalación de VVP (Vía Venosa Permeable)</li>
+      </ul>
+    </div>
 
+    <!-- Administración de medicamentos -->
+    <div class="servicio-card">
+      <i class="fas fa-pills servicio-icon"></i>
+      <h3>Administración de Medicamentos</h3>
+      <p>
+        Aplicación de tratamientos farmacológicos según indicación médica, asegurando la correcta
+        dosificación y supervisión.
+      </p>
+    </div>
+
+    <!-- Control de signos vitales -->
+    <div class="servicio-card">
+      <i class="fas fa-heartbeat servicio-icon"></i>
+      <h3>Control de Signos Vitales</h3>
+      <p>
+        Monitoreo periódico de presión arterial, frecuencia cardíaca, temperatura y otros parámetros
+        esenciales para evaluar el estado de salud del paciente.
+      </p>
+    </div>
+
+  </div>
+</section>
+<style>
+    #servicios {
+  padding: 2rem;
+  background: #f9f9f9;
+}
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.servicio-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.servicio-card:hover {
+  transform: translateY(-5px);
+}
+
+.servicio-icon {
+  font-size: 2rem;
+  color: var(--color-acento1);
+  margin-bottom: 0.5rem;
+}
+</style>
     <section id="testimonios">
         <h2><i class="fas fa-quote-left" style="color: var(--color-principal);"></i> La Confianza de Mis Pacientes</h2>
         <div class="testimonial-container">
@@ -485,36 +726,126 @@
         <h2><i class="fas fa-phone-alt" style="color: var(--color-acento1);"></i> Agenda tu Cuidado</h2>
         <p style="font-size: 1.2em;">Comunícate directamente para solicitar una visita o asesoría.</p>
         
-        <div class="contact-content">
-            
-            <div class="contact-form">
-                <h3>Formulario de Consulta</h3>
-                <form action="https://www.reddit.com/r/elementor/comments/1cy2wjb/form_returning_server_error/?tl=es-419" method="POST">
-                    <input type="text" name="nombre" placeholder="Nombre Completo" required>
-                    <br><br>
-                    <input type="tel" name="telefono" placeholder="Teléfono de Contacto" required>
-                    <br><br>
-                    <input type="email" name="email" placeholder="Correo Electrónico" required>
-                    <br><br>
-                    <textarea name="mensaje" rows="5" placeholder="Cuéntame brevemente el motivo de tu consulta..." required></textarea>
-                    <button type="submit" class="cta-button" style="width: 100%;">Enviar Consulta</button>
-                </form>
-            </div>
-            
-            <div class="contact-info">
-                <h3>Datos de Contacto</h3>
-                <p><i class="fas fa-phone"></i> **Teléfono:** <a href="tel:[NÚMERO SIN ESPACIOS]">[NÚMERO DE TELÉFONO DE INGRID]</a></p>
-                <p><i class="fas fa-envelope"></i> **Email:** <a href="mailto:[CORREO]">[CORREO ELECTRÓNICO PROFESIONAL]</a></p>
-                <p><i class="far fa-clock"></i> **Horario de Atención:** **[HORARIO Y DÍAS DISPONIBLES]**</p>
-                <p><i class="fas fa-map-marker-alt"></i> **Área de Cobertura:** **[ÁREA GEOGRÁFICA DONDE OFRECE SERVICIOS]**</p>
-            </div>
-        </div>
+   <div class="contact-content">
+    <a href="#contacto" class="cta-button" id="btn-agendar-contacto">Agenda tu Hora Ahora</a>
+    <div class="contact-info">
+        <h3>Datos de Contacto</h3>
+        <p><i class="fas fa-phone"></i> <strong>Teléfono:</strong> <a href="tel:+56930273353">+56 9 3027 3353</a></p>
+        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:ingridcarola1973@gmail.com">ingridcarola1973@gmail.com</a></p>
+        <p><i class="fas fa-map-marker-alt"></i> <strong>Área de Cobertura:</strong> Las Condes, Santiago</p>
+    </div>
+</div>
     </section>
+    <div id="modal-calendario" class="modalAgenda">
+        <div class="contenidoModalAgenda">
+            <span class="cerrarModalAgenda" id="cerrar-modal-calendario">&times;</span>
+            <div style="display:flex;align-items:center;gap:12px;justify-content:center">
+                <button id="mesAnterior" class="cta-button" style="padding:8px 12px">←</button>
+                <h3 id="tituloMes" style="margin:0"></h3>
+                <button id="mesSiguiente" class="cta-button" style="padding:8px 12px">→</button>
+                <button id="btn-panel" class="cta-button" style="padding:8px 12px">⚙️ Panel</button>
+            </div>
+            <h2>Selecciona un día disponible</h2>
+            <br>  <button id="desactivar-bloqueo" class="cta-button"  style="background-color: red; padding:8px 12px; display: none;" onclick="document.getElementById('desactivar-bloqueo').style.display = 'none';" >Desactivar bloqueo</button>
+            <div class="dias-semana">
+                <div>Lun</div>
+                <div>Mar</div>
+                <div>Mié</div>
+                <div>Jue</div>
+                <div>Vie</div>
+                <div>Sáb</div>
+                <div>Dom</div>
+            </div>
+            <div id="cuadroCalendario"></div>
+        </div>
+    </div>
+    <div id="modal-horarios" class="modalBarberia">
+        <div class="contenidoModal">
+            <span id="cerrarVentana" style="border: 1px solid #000; padding: 8px; border-radius: 20%; background-color: red; color: #fff;"  class="cerrarModal">Cerrar</span>
+         <br>   <h3 id="tituloVentana"></h3>
+            <h3>Selecciona la hora</h3>
+            <div id="horariosDisponibles"></div>
+        </div>
+    </div>
+  
+    <form action="">
+       <div id="modal-hora-personalizada" class="modalBarberia">
+    <div class="contenidoModal">
+        <!-- Botón solo para cambiar día -->
+        <button type="button" id="cambiar-dia-btn" class="cta-button" style="padding:10px 16px">Cambiar Día</button>
+        <input disabled type="date" id="fecha" required>
+
+        <p>Se te redireccionará a <span style="color: green;">WhatsApp</span></p>
+      <label for="nombre">Nombre</label>  <input style="width: 280px;" type="text" placeholder="Escribe tu nombre" id="nombre">
+<br>
+        <!-- Input de hora -->
+        <input style="width: 90px;" type="text" id="hora" disabled>
+
+        <!-- Botón solo para cambiar hora -->
+        <button  id="cambiar-hora-btn" class="cta-button" style="padding:10px 16px">Cambiar Hora</button>
+<br><br>
+        <button  id="reservar-button" style="background-color: green !important;" type="button" class="cta-button">Agendar</button>
+    </div>
+</div>
+<script>
+    document.getElementById("cambiar-dia-btn").addEventListener("click", function() {
+   document.getElementById('modal-calendario').style.display = 'block'; 
+   document.getElementById('modal-hora-personalizada').style.display = 'none';
+        const fechaInput = document.getElementById("fecha");
+    fechaInput.disabled = false; // habilita el input
+    fechaInput.focus();          // pone el cursor ahímodal-hora-personalizada
+});
+
+document.getElementById("cambiar-hora-btn").addEventListener("click", function(e) {
+ document.getElementById("modal-hora-personalizada").style.display = 'none';   e.preventDefault();
+    // El handler se define más abajo de forma centralizada
+});
+</script>
+    </form>
+    <div id="modal-reservada" class="modalBarberia">
+        <div class="contenidoModal">
+            <h3>HORA DISPONIBLE</h3>
+        </div>
+    </div>
+    <div id="modal-acceso" class="modalBarberia" style="display:none">
+        <div class="contenidoModal">
+            <span class="cerrarModal" id="cerrar-modal-acceso">&times;</span>
+            <h3>Acceso</h3>
+            <input type="password" id="clave-input" maxlength="4" placeholder="clave">
+            <button id="btn-entrar" class="cta-button">Entrar</button>
+     <button id="btn-salir" class="cta-button" onclick="document.getElementById('modal-acceso').style.display = 'none';" >Salir</button>    </div>
+    </div>
+    <div id="modal-control" class="modalBarberia" style="display:none">
+        <div class="contenidoModal">
+            <span class="cerrarModal" id="cerrar-modal-control">&times;</span>
+            <h3>Panel de Control</h3>
+            <button id="activar-bloqueo" type="button"  class="cta-button" style="padding:8px 12px">Marcar días cerrados 1x1</button>
+          <script>
+            
+          </script>
+            <button id="activar-horarios" class="cta-button" style="padding:8px 12px">Configurar horarios personalizados</button>
+            <button id="borrar-todas" class="cta-button" style="padding:8px 12px">Borrar TODAS las reservas</button>
+            <button id="cerrar-panel" class="cta-button" style="padding:8px 12px">Cerrar Panel</button>  ______________  <div id="listaReservas"></div>
+        </div>
+    </div>
+    <div id="modal-configuracion-horarios" class="modalBarberia" style="display:none">
+        <div class="contenidoModal">
+            <span class="cerrarModal" id="cerrar-modal-config">&times;</span>
+            <h3 id="titulo-config-horarios">Configurar Horario</h3>
+            <p id="fecha-config-horarios"></p>
+            <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;">
+                <button id="boton-horario-semana" class="cta-button">Horario de Semana</button>
+                <button id="boton-horario-sabado" class="cta-button">Horario de Sábado</button>
+                <button id="boton-horario-cerrado" class="cta-button">Día Cerrado</button>
+            </div>
+            <div id="botones-toggle-horas" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div>
+            <button id="guardar-horario" class="cta-button">Guardar</button>
+        </div>
+    </div>
 
     <footer>
         <div class="social-icons">
             <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="https://wa.me/[NÚMERO SIN SIGNOS]" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
         <p style="margin-top: 10px;">&copy; 2025 Enfermera Ingrid Arriagada Muñoz. Todos los derechos reservados.</p>
@@ -535,5 +866,361 @@
             });
         }
     </script>
+    <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBSseZN21-xYc7uX7kekP0kb79xdWpWqds",
+  authDomain: "enfingridarriagada.firebaseapp.com",
+  databaseURL: "https://enfingridarriagada-default-rtdb.firebaseio.com",
+  projectId: "enfingridarriagada",
+  storageBucket: "enfingridarriagada.firebasestorage.app",
+  messagingSenderId: "866351461780",
+  appId: "1:866351461780:web:51651096722ec030b28b81",
+  measurementId: "G-R5YXJP3BBH"
+};
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const reservasRef = db.ref("reservas");
+        const horariosRef = db.ref("horarios");
+        const diasBloqueadosRef = db.ref("diasBloqueados");
+        if (firebase.auth) {
+            firebase.auth().signInAnonymously().catch(err => {
+                console.error("Error de autenticación anónima:", err?.message || err);
+            });
+        }
+
+        const fechaInput = document.getElementById("fecha");
+        const cuadroCalendario = document.getElementById("cuadroCalendario");
+        const ventanaHorarios = document.getElementById("modal-horarios");
+        const cerrarVentana = document.getElementById("cerrarVentana");
+        const tituloVentana = document.getElementById("tituloVentana");
+        const horariosDisponibles = document.getElementById("horariosDisponibles");
+        const tituloMes = document.getElementById("tituloMes");
+        const botonAnterior = document.getElementById("mesAnterior");
+        const botonSiguiente = document.getElementById("mesSiguiente");
+        const btnPanel = document.getElementById("btn-panel");
+        const modalAcceso = document.getElementById("modal-acceso");
+        const modalControl = document.getElementById("modal-control");
+        const modalConfigHorarios = document.getElementById("modal-configuracion-horarios");
+        const tituloConfigHorarios = document.getElementById("titulo-config-horarios");
+        const fechaConfigHorarios = document.getElementById("fecha-config-horarios");
+        const botonesToggleHoras = document.getElementById("botones-toggle-horas");
+
+        let diasBloqueados = [];
+        let horariosPersonalizados = {};
+        let reservasPorDia = {};
+        let fechaActualCalendario = new Date();
+        let modoBloqueoDias = false;
+        let modoGestionHorarios = false;
+        let fechaSeleccionadaParaConfigurar = "";
+
+        const mesesTexto = [
+            "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+            "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+        ];
+
+        reservasRef.on("value", snapshot => {
+            reservasPorDia = {};
+            snapshot.forEach(child => {
+                const r = child.val();
+                if (!r || !r.fecha || !r.hora) return;
+                if (!reservasPorDia[r.fecha]) reservasPorDia[r.fecha] = [];
+                reservasPorDia[r.fecha].push(r.hora);
+            });
+            actualizarBarraMes();
+        });
+        function appendReservaToList({fecha, hora, nombre, key}) {
+            const cont = document.getElementById("listaReservas");
+            if (!cont) return;
+            const idBloque = `${fecha}-${hora}`;
+            if (document.getElementById(idBloque)) return;
+            const div = document.createElement("div");
+            div.className = "reserva-item";
+            div.id = idBloque;
+            div.dataset.order = new Date(`${fecha}T${hora}:00`).getTime();
+            const texto = document.createElement("span");
+            texto.textContent = `📅 ${fecha} ⏰ ${hora} - ${nombre || ""}`;
+            const botonX = document.createElement("span");
+            botonX.textContent = " | ❌";
+            botonX.className = "boton-x";
+            botonX.title = "Eliminar esta hora";
+            botonX.onclick = () => { reservasRef.child(key).remove(); div.remove(); };
+            div.appendChild(texto);
+            div.appendChild(botonX);
+            let insertado = false;
+            const hijos = Array.from(cont.children);
+            for (let i = 0; i < hijos.length; i++) {
+                const h = hijos[i];
+                const hOrder = parseInt(h.dataset.order || "0", 10);
+                if (parseInt(div.dataset.order, 10) < hOrder) {
+                    cont.insertBefore(div, h);
+                    insertado = true;
+                    break;
+                }
+            }
+            if (!insertado) cont.appendChild(div);
+        }
+        reservasRef.on("child_added", snap => {
+            const v = snap.val();
+            appendReservaToList({fecha: v.fecha, hora: v.hora, nombre: v.nombre, key: snap.key});
+        });
+        diasBloqueadosRef.on("value", snapshot => {
+            diasBloqueados = [];
+            snapshot.forEach(child => {
+                const v = child.val();
+                if (v && v.fecha) diasBloqueados.push(v.fecha);
+            });
+            actualizarBarraMes();
+        });
+        horariosRef.on("value", snapshot => {
+            horariosPersonalizados = snapshot.val() || {};
+            actualizarBarraMes();
+        });
+
+        function obtenerHorarioDelDiaDesdeFecha(fechaStr) {
+            if (horariosPersonalizados[fechaStr]) return horariosPersonalizados[fechaStr];
+            const d = new Date(fechaStr);
+            const day = d.getDay();
+            const horas = [];
+            function pushRange(start,end){ for(let h=start; h<=end; h++) horas.push(String(h).padStart(2,"0")+":00"); }
+            if (day === 0) return horas; // domingo cerrado
+            if (day === 6) { pushRange(9,14); return horas; } // sábado
+            pushRange(9,18); // lunes-viernes
+            return horas;
+        }
+
+        function generarCuadroCalendario() {
+            const mesStr = `${fechaActualCalendario.getFullYear()}-${String(fechaActualCalendario.getMonth()+1).padStart(2,"0")}`;
+            cuadroCalendario.innerHTML = "";
+            const [anio, mes] = mesStr.split("-");
+            const fechaInicio = new Date(anio, mes-1, 1);
+            const primerDiaSemana = fechaInicio.getDay();
+            const totalDias = new Date(anio, mes, 0).getDate();
+            const offset = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+            for (let i=0;i<offset;i++) cuadroCalendario.appendChild(document.createElement("div"));
+            for (let dia=1; dia<=totalDias; dia++) {
+                const fechaActual = `${anio}-${String(mes).padStart(2,"0")}-${String(dia).padStart(2,"0")}`;
+                const celda = document.createElement("div");
+                celda.classList.add("diaCalendario");
+                celda.textContent = dia;
+                const horasReservadas = reservasPorDia[fechaActual] || [];
+                const horarioDelDia = obtenerHorarioDelDiaDesdeFecha(fechaActual);
+                const fechaCelda = new Date(anio, mes-1, dia);
+                const diaPasado = fechaCelda < hoy;
+                const estaBloqueado = diasBloqueados.includes(fechaActual) || horarioDelDia.length === 0;
+                const estaOcupado = horasReservadas.length >= horarioDelDia.length;
+                if (diaPasado) celda.classList.add("diaPasado");
+                else if (estaBloqueado) celda.classList.add("diaBloqueado");
+                else if (estaOcupado) celda.classList.add("diaOcupado");
+                else celda.classList.add("diaLibre");
+                if (diaPasado || (!modoBloqueoDias && estaBloqueado)) celda.style.pointerEvents = "none";
+                celda.onclick = () => {
+                    if (diaPasado) return;
+                    if (modoGestionHorarios) {
+                        fechaSeleccionadaParaConfigurar = fechaActual;
+                        abrirVentanaConfiguracionHorarios();
+                    } else if (modoBloqueoDias) {
+                        if (estaBloqueado) {
+                            diasBloqueadosRef.once("value", snapshot => {
+                                snapshot.forEach(child => {
+                                    if (child.val().fecha === fechaActual) child.ref.remove();
+                                });
+                            });
+                        } else {
+                            diasBloqueadosRef.push({ fecha: fechaActual });
+                        }
+                        actualizarBarraMes();
+                    } else {
+                        if (estaBloqueado) return;
+                        fechaInput.value = fechaActual;
+                        abrirVentanaHorarios(fechaActual);
+                        cerrarCalendarioModal();
+                    }
+                };
+                cuadroCalendario.appendChild(celda);
+            }
+        }
+        function actualizarBarraMes() {
+            const mes = fechaActualCalendario.getMonth();
+            const año = fechaActualCalendario.getFullYear();
+            tituloMes.textContent = `${mesesTexto[mes]} ${año}`;
+            generarCuadroCalendario();
+        }
+        botonAnterior.onclick = () => { fechaActualCalendario.setMonth(fechaActualCalendario.getMonth()-1); actualizarBarraMes(); };
+        botonSiguiente.onclick = () => { fechaActualCalendario.setMonth(fechaActualCalendario.getMonth()+1); actualizarBarraMes(); };
+
+        function abrirVentanaHorarios(fecha) {
+            tituloVentana.textContent = `HORAS DISPONIBLES ${fecha}`;
+            horariosDisponibles.innerHTML = "";
+            const horasReservadas = reservasPorDia[fecha] || [];
+            const horarioDelDia = obtenerHorarioDelDiaDesdeFecha(fecha);
+            horarioDelDia.forEach(hora => {
+                const bloque = document.createElement("div");
+                bloque.classList.add("bloqueHora");
+                if (horasReservadas.includes(hora)) {
+                    bloque.classList.add("horaOcupada");
+                    bloque.textContent = `⛔ ${hora}`;
+                } else {
+                    bloque.classList.add("horaLibre");
+                    bloque.textContent = `✅ ${hora}`;
+                    bloque.onclick = () => {
+                        document.getElementById("hora").value = hora;
+                        fechaInput.value = fecha;
+                        document.getElementById("modal-hora-personalizada").style.display = "block";
+                        ventanaHorarios.style.display = "none";
+                    };
+                }
+                horariosDisponibles.appendChild(bloque);
+            });
+            ventanaHorarios.style.display = "block";
+        }
+        cerrarVentana.onclick = () => { ventanaHorarios.style.display = "none"; };
+        window.onclick = (e) => { if (e.target === ventanaHorarios) ventanaHorarios.style.display = "none"; };
+
+        function enviarMensajeWhatsApp() {
+            const nombre = document.getElementById("nombre")?.value.trim();
+            const fecha = fechaInput.value;
+            const hora = document.getElementById("hora").value;
+            if (!nombre || !fecha || !hora) {
+                alert("Faltan datos: asegúrate de ingresar nombre, fecha y hora");
+                return;
+            }
+            const numeroDestino = "56930273353";
+            const mensaje = `Hola, soy ${nombre}. Quiero reservar para el día ${fecha} a las ${hora}.`;
+            const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, "_blank");
+        }
+        function reservarHora() {
+            const nombre = document.getElementById("nombre")?.value.trim();
+            const fecha = fechaInput.value;
+            const hora = document.getElementById("hora").value;
+            if (!fecha || !hora || !nombre) {
+                alert("Completa todos los campos: nombre, fecha y hora");
+                return;
+            }
+            const idBloque = `${fecha}-${hora}`;
+            const ref = reservasRef;
+            ref.once("value", snapshot => {
+                let ocupada = false;
+                snapshot.forEach(child => {
+                    const r = child.val();
+                    if (`${r.fecha}-${r.hora}` === idBloque) ocupada = true;
+                });
+                if (ocupada) {
+                    alert("La hora seleccionada ya está ocupada");
+                } else {
+                    ref.push({ fecha, hora, nombre }).then(() => {
+                        document.getElementById("modal-reservada").style.display = "block";
+                        enviarMensajeWhatsApp();
+                        setTimeout(() => {
+                            document.getElementById("modal-reservada").style.display = "none";
+                            document.getElementById("modal-hora-personalizada").style.display = "none";
+                        }, 1500);
+                    });
+                }
+            });
+        }
+        document.getElementById("reservar-button").onclick = reservarHora;
+        function abrirCalendarioModal() { document.getElementById('modal-calendario').classList.add('activa'); actualizarBarraMes(); }
+        function cerrarCalendarioModal() { document.getElementById('modal-calendario').classList.remove('activa'); }
+        document.getElementById('btn-whatsapp').onclick = function(e){ e.preventDefault(); abrirCalendarioModal(); };
+        const heroBtn = document.getElementById('btn-agendar-hero'); if (heroBtn) heroBtn.onclick = function(e){ e.preventDefault(); abrirCalendarioModal(); };
+        const contactoBtn = document.getElementById('btn-agendar-contacto'); if (contactoBtn) contactoBtn.onclick = function(e){ e.preventDefault(); abrirCalendarioModal(); };
+        document.getElementById('cerrar-modal-calendario').onclick = cerrarCalendarioModal;
+        document.getElementById('cambiar-hora-btn').onclick = function(e){
+            e.preventDefault();
+            const f = document.getElementById('fecha').value;
+            if (f) abrirVentanaHorarios(f);
+            else abrirCalendarioModal();
+        };
+        btnPanel.onclick = function(e){ e.preventDefault(); modalAcceso.style.display = "block"; };
+        document.getElementById('cerrar-modal-acceso').onclick = function(){ modalAcceso.style.display = "none"; };
+        document.getElementById('cerrar-modal-control').onclick = function(){ modalControl.style.display = "none"; modoBloqueoDias = false; modoGestionHorarios = false; };
+        document.getElementById('cerrar-modal-config').onclick = function(){ modalConfigHorarios.style.display = "none"; modoGestionHorarios = false; };
+        document.getElementById('btn-entrar').onclick = function(){
+            const claveInputVal = document.getElementById("clave-input").value;
+            if (claveInputVal === "1234") {
+                modalAcceso.style.display = "none";
+                modalControl.style.display = "block";
+                document.getElementById("clave-input").value = "";
+            } else {
+                alert("Clave incorrecta");
+            }
+        };
+        document.getElementById('activar-bloqueo').onclick = function(){ 
+            modoBloqueoDias = true; 
+            modoGestionHorarios = false; 
+            modalControl.style.display = "none"; 
+            document.getElementById('desactivar-bloqueo').style.display = "block"; // Mostrar botón
+            actualizarBarraMes(); 
+        };
+        document.getElementById('desactivar-bloqueo').onclick = function(){ 
+            modoBloqueoDias = false; 
+            document.getElementById('desactivar-bloqueo').style.display = "none"; // Ocultar botón
+            actualizarBarraMes(); 
+        };
+        document.getElementById('activar-horarios').onclick = function(){  modoGestionHorarios = true; modoBloqueoDias = false; modalControl.style.display = "none"; };
+        document.getElementById('borrar-todas').onclick = function(){
+            if (confirm('¿Borrar todas las reservas?')) {
+                reservasRef.remove().then(() => {
+                    modalControl.style.display = "none";
+                    modoBloqueoDias = false;
+                    modoGestionHorarios = false;
+                    actualizarBarraMes();
+                }).catch(error => { alert("Error al borrar las reservas: " + error.message); });
+            }
+        };
+        document.getElementById('cerrar-panel').onclick = function(){ modalControl.style.display = "none"; modoBloqueoDias = false; modoGestionHorarios = false; };
+        function abrirVentanaConfiguracionHorarios() {
+            tituloConfigHorarios.textContent = "Configurar Horario " + fechaSeleccionadaParaConfigurar;
+            fechaConfigHorarios.textContent = "";
+            document.getElementById("boton-horario-semana").onclick = () => { cargarHorasEnModal(obtenerHorarioSemanaBase()); };
+            document.getElementById("boton-horario-sabado").onclick = () => { cargarHorasEnModal(obtenerHorarioSabadoBase()); };
+            document.getElementById("boton-horario-cerrado").onclick = () => { cargarHorasEnModal([]); };
+            const horarioActual = horariosPersonalizados[fechaSeleccionadaParaConfigurar] || [];
+            cargarHorasEnModal(horarioActual);
+            modalConfigHorarios.style.display = "block";
+        }
+        function obtenerHorarioSemanaBase() {
+            const horas = [];
+            for (let h = 9; h <= 18; h++) horas.push(String(h).padStart(2,"0")+":00");
+            return horas;
+        }
+        function obtenerHorarioSabadoBase() {
+            const horas = [];
+            for (let h = 9; h <= 14; h++) horas.push(String(h).padStart(2,"0")+":00");
+            return horas;
+        }
+        function cargarHorasEnModal(horasActivas) {
+            botonesToggleHoras.innerHTML = "";
+            const base = Array.from(new Set([...obtenerHorarioSemanaBase(), ...obtenerHorarioSabadoBase()]));
+            base.forEach(hora => {
+                const boton = document.createElement("button");
+                boton.textContent = hora;
+                boton.classList.add("toggle-hora");
+                if (horasActivas.includes(hora)) boton.classList.add("activo");
+                boton.onclick = () => { boton.classList.toggle("activo"); };
+                botonesToggleHoras.appendChild(boton);
+            });
+        }
+        document.getElementById("guardar-horario").onclick = function() {
+            const horasSeleccionadas = [];
+            botonesToggleHoras.querySelectorAll(".activo").forEach(b => { horasSeleccionadas.push(b.textContent); });
+            if (horasSeleccionadas.length > 0) {
+                horariosRef.child(fechaSeleccionadaParaConfigurar).set(horasSeleccionadas).then(() => {
+                    modalConfigHorarios.style.display = "none";
+                    modoGestionHorarios = false;
+                    actualizarBarraMes();
+                }).catch(error => { alert("Error al guardar el horario: " + error.message); });
+            } else {
+                horariosRef.child(fechaSeleccionadaParaConfigurar).remove().then(() => {
+                    modalConfigHorarios.style.display = "none";
+                    modoGestionHorarios = false;
+                    actualizarBarraMes();
+                }).catch(error => { alert("Error al borrar el horario: " + error.message); });
+            }
+        };
+    </script>
+    
 </body>
 </html>
