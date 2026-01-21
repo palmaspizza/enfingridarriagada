@@ -430,28 +430,36 @@
             .contact-form, .contact-info { width: 100%; max-width: 90%; text-align: center; }
             .contact-form { order: 2; }
             .contact-info { order: 1; }
+            
+            /* Ajustes Calendario Móvil */
+            .diaCalendario { padding: 5px; font-size: 0.9em; }
+            .dias-semana div { font-size: 0.8em; padding: 4px 0; }
         }
         .modalAgenda {
             display: none;
             position: fixed;
             z-index: 1001;
             left: 0;
-            top: -10px;
+            top: 0;
             width: 100%;
-            height: 900px;
+            height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
         }
         .modalAgenda.activa { display: block; }
         .contenidoModalAgenda {
             background-color: #fff;
             color: var(--color-principal);
-            margin: 5% auto;
-            padding: 20px;
-            width: 90%;
+            margin: 2% auto;
+            padding: 15px;
+            width: 95%;
             max-width: 600px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            height: auto;
+            border: 1px solid #000;
         }
         .cerrarModalAgenda {
             position: absolute;
@@ -510,12 +518,12 @@
         .contenidoModal {
             background-color: #fff;
             color: var(--color-principal);
-            margin: 5% auto; /* Reduced margin to fit better */
+            margin: 2% auto;
             padding: 20px;
-            width: 90%;
-            height: auto; /* Allow auto height */
-            max-height: 85vh; /* Limit height for scroll */
-            overflow-y: auto; /* Enable scroll */
+            width: 95%;
+            height: auto;
+            max-height: 90vh;
+            overflow-y: auto;
             max-width: 600px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -744,11 +752,11 @@
             <span class="cerrarModalAgenda" id="cerrar-modal-calendario">&times;</span>
             <div style="display:flex;align-items:center;gap:12px;justify-content:center">
               
-                <h3 id="tituloMes" style="margin:0"></h3>
-               
+                <h1 id="tituloMes" style="margin:0"></h1>
+               <br>
                 <button id="btn-panel" class="cta-button" style="padding:8px 12px">⚙️ Panel</button>
             </div>
-            <h2>Selecciona un día disponible</h2>
+            <h2>Selecciona un día <H2 style="color: green;">DISPONIBLE</H2></h2>
             <br>  <button id="mesAnterior" class="cta-button" style="padding:8px 12px">← Mes Anterior</button>  <button id="desactivar-bloqueo" class="cta-button"  style="background-color: red; padding:8px 12px; display: none;" onclick="document.getElementById('desactivar-bloqueo').style.display = 'none';" >Desactivar bloqueo</button>
             <div class="dias-semana">
                 <div>Lun</div>
@@ -864,7 +872,7 @@ document.getElementById("cambiar-hora-btn").addEventListener("click", function(e
             <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="https://wa.me/56930273353" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
-        <p style="margin-top: 10px;">&copy; 2025 Enfermera Ingrid Arriagada Muñoz. Todos los derechos reservados.</p>
+        <p style="margin-top: 10px;">&copy; 2026 Enfermera Ingrid Arriagada Muñoz. Todos los derechos reservados.</p>
     </footer>
 
     <script>
