@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enfermera Ingrid Arriagada Muñoz - Cuidado Profesional y Humanizado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="P1000020al2.JPG">
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -509,10 +510,12 @@
         .contenidoModal {
             background-color: #fff;
             color: var(--color-principal);
-            margin: 8% auto;
+            margin: 5% auto; /* Reduced margin to fit better */
             padding: 20px;
             width: 90%;
-            height: 100%;
+            height: auto; /* Allow auto height */
+            max-height: 85vh; /* Limit height for scroll */
+            overflow-y: auto; /* Enable scroll */
             max-width: 600px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -740,13 +743,13 @@
         <div class="contenidoModalAgenda">
             <span class="cerrarModalAgenda" id="cerrar-modal-calendario">&times;</span>
             <div style="display:flex;align-items:center;gap:12px;justify-content:center">
-                <button id="mesAnterior" class="cta-button" style="padding:8px 12px">←</button>
+              
                 <h3 id="tituloMes" style="margin:0"></h3>
-                <button id="mesSiguiente" class="cta-button" style="padding:8px 12px">→</button>
+               
                 <button id="btn-panel" class="cta-button" style="padding:8px 12px">⚙️ Panel</button>
             </div>
             <h2>Selecciona un día disponible</h2>
-            <br>  <button id="desactivar-bloqueo" class="cta-button"  style="background-color: red; padding:8px 12px; display: none;" onclick="document.getElementById('desactivar-bloqueo').style.display = 'none';" >Desactivar bloqueo</button>
+            <br>  <button id="mesAnterior" class="cta-button" style="padding:8px 12px">← Mes Anterior</button>  <button id="desactivar-bloqueo" class="cta-button"  style="background-color: red; padding:8px 12px; display: none;" onclick="document.getElementById('desactivar-bloqueo').style.display = 'none';" >Desactivar bloqueo</button>
             <div class="dias-semana">
                 <div>Lun</div>
                 <div>Mar</div>
@@ -757,7 +760,7 @@
                 <div>Dom</div>
             </div>
             <div id="cuadroCalendario"></div>
-        </div>
+        <button id="mesSiguiente" class="cta-button" style="padding:8px 12px">Mes Siguiente→</button> </div>
     </div>
     <div id="modal-horarios" class="modalBarberia">
         <div class="contenidoModal">
@@ -820,9 +823,20 @@ document.getElementById("cambiar-hora-btn").addEventListener("click", function(e
             <span class="cerrarModal" id="cerrar-modal-control">&times;</span>
             <h3>Panel de Control</h3>
             <button id="activar-bloqueo" type="button"  class="cta-button" style="padding:8px 12px">Marcar días cerrados 1x1</button>
-          <script>
             
-          </script>
+            <div id="controles-semanales" style="margin: 15px 0; border-top: 1px solid #ccc; padding-top: 15px;">
+                <h4 style="text-align: center; margin-bottom: 10px;">Gestión Semanal (Toque para cerrar/abrir)</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <button id="btn-toggle-1" class="cta-button" style="width:100%; padding: 15px;">Lunes</button>
+                    <button id="btn-toggle-2" class="cta-button" style="width:100%; padding: 15px;">Martes</button>
+                    <button id="btn-toggle-3" class="cta-button" style="width:100%; padding: 15px;">Miércoles</button>
+                    <button id="btn-toggle-4" class="cta-button" style="width:100%; padding: 15px;">Jueves</button>
+                    <button id="btn-toggle-5" class="cta-button" style="width:100%; padding: 15px;">Viernes</button>
+                    <button id="btn-toggle-6" class="cta-button" style="width:100%; padding: 15px;">Sábado</button>
+                    <button id="btn-toggle-0" class="cta-button" style="width:100%; padding: 15px; grid-column: span 2;">Domingo</button>
+                </div>
+            </div>
+
             <button id="activar-horarios" class="cta-button" style="padding:8px 12px">Configurar horarios personalizados</button>
             <button id="borrar-todas" class="cta-button" style="padding:8px 12px">Borrar TODAS las reservas</button>
             <button id="cerrar-panel" class="cta-button" style="padding:8px 12px">Cerrar Panel</button>  ______________  <div id="listaReservas"></div>
@@ -843,10 +857,12 @@ document.getElementById("cambiar-hora-btn").addEventListener("click", function(e
         </div>
     </div>
 
+
+
     <footer>
         <div class="social-icons">
             <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/[NÚMERO SIN SIGNOS]" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://wa.me/56930273353" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
         <p style="margin-top: 10px;">&copy; 2025 Enfermera Ingrid Arriagada Muñoz. Todos los derechos reservados.</p>
     </footer>
@@ -882,6 +898,7 @@ const firebaseConfig = {
         const reservasRef = db.ref("reservas");
         const horariosRef = db.ref("horarios");
         const diasBloqueadosRef = db.ref("diasBloqueados");
+        const diasSemanaBloqueadosRef = db.ref("diasSemanaBloqueados");
         if (firebase.auth) {
             firebase.auth().signInAnonymously().catch(err => {
                 console.error("Error de autenticación anónima:", err?.message || err);
@@ -906,6 +923,7 @@ const firebaseConfig = {
         const botonesToggleHoras = document.getElementById("botones-toggle-horas");
 
         let diasBloqueados = [];
+        let diasSemanaBloqueados = [];
         let horariosPersonalizados = {};
         let reservasPorDia = {};
         let fechaActualCalendario = new Date();
@@ -971,6 +989,43 @@ const firebaseConfig = {
             });
             actualizarBarraMes();
         });
+        
+        diasSemanaBloqueadosRef.on("value", snapshot => {
+            diasSemanaBloqueados = snapshot.val() || [];
+            actualizarBarraMes();
+            actualizarBotonesSemana();
+        });
+
+        const diasSemanaNombres = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+        function actualizarBotonesSemana() {
+            for (let i = 0; i <= 6; i++) {
+                const btn = document.getElementById(`btn-toggle-${i}`);
+                if (!btn) continue;
+                const bloqueado = diasSemanaBloqueados.includes(i);
+                const nombreDia = diasSemanaNombres[i];
+                
+                if (bloqueado) {
+                    btn.innerHTML = `${nombreDia} <br>⛔ CERRADO`;
+                    btn.style.backgroundColor = "#c0392b"; // Rojo
+                } else {
+                    btn.innerHTML = `${nombreDia} <br>✅ ABIERTO`;
+                    btn.style.backgroundColor = "#27ae60"; // Verde
+                }
+                // Asignar el evento onclick una sola vez o reasignarlo es seguro aquí
+                btn.onclick = () => toggleDiaSemana(i);
+            }
+        }
+
+        function toggleDiaSemana(diaIndex) {
+            const index = diasSemanaBloqueados.indexOf(diaIndex);
+            let nuevos = [...diasSemanaBloqueados];
+            if (index > -1) {
+                nuevos.splice(index, 1);
+            } else {
+                nuevos.push(diaIndex);
+            }
+            diasSemanaBloqueadosRef.set(nuevos);
+        }
         horariosRef.on("value", snapshot => {
             horariosPersonalizados = snapshot.val() || {};
             actualizarBarraMes();
@@ -978,13 +1033,16 @@ const firebaseConfig = {
 
         function obtenerHorarioDelDiaDesdeFecha(fechaStr) {
             if (horariosPersonalizados[fechaStr]) return horariosPersonalizados[fechaStr];
-            const d = new Date(fechaStr);
-            const day = d.getDay();
+            // Parse manual para evitar desfase de zona horaria (UTC vs Local)
+            const [y, m, d] = fechaStr.split("-").map(Number);
+            const dateObj = new Date(y, m - 1, d);
+            const day = dateObj.getDay();
+            
             const horas = [];
             function pushRange(start,end){ for(let h=start; h<=end; h++) horas.push(String(h).padStart(2,"0")+":00"); }
-            if (day === 0) return horas; // domingo cerrado
+            // if (day === 0) return horas; // domingo cerrado (ahora controlado por panel)
             if (day === 6) { pushRange(9,14); return horas; } // sábado
-            pushRange(9,18); // lunes-viernes
+            pushRange(9,18); // lunes-viernes y domingo
             return horas;
         }
 
@@ -1007,7 +1065,10 @@ const firebaseConfig = {
                 const horarioDelDia = obtenerHorarioDelDiaDesdeFecha(fechaActual);
                 const fechaCelda = new Date(anio, mes-1, dia);
                 const diaPasado = fechaCelda < hoy;
-                const estaBloqueado = diasBloqueados.includes(fechaActual) || horarioDelDia.length === 0;
+                const diaSemana = fechaCelda.getDay(); // 0=Domingo, 1=Lunes, etc.
+                const estaBloqueado = diasBloqueados.includes(fechaActual) || 
+                                      (diasSemanaBloqueados && diasSemanaBloqueados.includes(diaSemana)) ||
+                                      horarioDelDia.length === 0;
                 const estaOcupado = horasReservadas.length >= horarioDelDia.length;
                 if (diaPasado) celda.classList.add("diaPasado");
                 else if (estaBloqueado) celda.classList.add("diaBloqueado");
@@ -1220,6 +1281,8 @@ const firebaseConfig = {
                 }).catch(error => { alert("Error al borrar el horario: " + error.message); });
             }
         };
+
+
     </script>
     
 </body>
