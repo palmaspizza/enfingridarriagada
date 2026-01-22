@@ -513,7 +513,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: #fff;
         }
         .contenidoModal {
             background-color: #fff;
@@ -751,13 +751,13 @@
         <div class="contenidoModalAgenda">
             <span class="cerrarModalAgenda" id="cerrar-modal-calendario">&times;</span>
             <div style="display:flex;align-items:center;gap:12px;justify-content:center">
-              
+            <button id="btn-panel" class="cta-button" style="padding:8px 8px">⚙️</button>    
                 <h1 id="tituloMes" style="margin:0"></h1>
                <br>
-                <button id="btn-panel" class="cta-button" style="padding:8px 12px">⚙️ Panel</button>
+              
             </div>
             <h2>Selecciona un día <H2 style="color: green;">DISPONIBLE</H2></h2>
-            <br>  <button id="mesAnterior" class="cta-button" style="padding:8px 12px">← Mes Anterior</button>  <button id="desactivar-bloqueo" class="cta-button"  style="background-color: red; padding:8px 12px; display: none;" onclick="document.getElementById('desactivar-bloqueo').style.display = 'none';" >Desactivar bloqueo</button>
+            <br>  <button id="mesAnterior" class="cta-button" style="padding:8px 12px; background-color: #34495E;">← Mes Anterior</button>        <button id="mesSiguiente" class="cta-button" style="padding:8px 12px">Mes Siguiente→</button>  <button id="desactivar-bloqueo" class="cta-button"  style="background-color: red; padding:8px 12px; display: none;" onclick="document.getElementById('desactivar-bloqueo').style.display = 'none';" >Desactivar bloqueo</button>
             <div class="dias-semana">
                 <div>Lun</div>
                 <div>Mar</div>
@@ -768,7 +768,7 @@
                 <div>Dom</div>
             </div>
             <div id="cuadroCalendario"></div>
-        <button id="mesSiguiente" class="cta-button" style="padding:8px 12px">Mes Siguiente→</button> </div>
+ </div>
     </div>
     <div id="modal-horarios" class="modalBarberia">
         <div class="contenidoModal">
@@ -824,7 +824,7 @@ document.getElementById("cambiar-hora-btn").addEventListener("click", function(e
             <h3>Acceso</h3>
             <input type="password" id="clave-input" maxlength="4" placeholder="clave">
             <button id="btn-entrar" class="cta-button">Entrar</button>
-     <button id="btn-salir" class="cta-button" onclick="document.getElementById('modal-acceso').style.display = 'none';" >Salir</button>    </div>
+     <button id="btn-salir" class="cta-button" onclick="document.getElementById('modal-acceso').style.display = 'none';" style="background-color: red; color: #fff;" >Salir</button>    </div>
     </div>
     <div id="modal-control" class="modalBarberia" style="display:none">
         <div class="contenidoModal">
