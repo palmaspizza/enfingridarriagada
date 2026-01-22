@@ -251,6 +251,13 @@
             background-color: #16A085;
             transform: translateY(-2px);
         }
+        .cta-button:disabled {
+            background-color: #b5b5b5;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.85;
+        }
 
         /* Sección Quién Soy (Credenciales) */
         #quien-soy { background-color: white; }
@@ -482,6 +489,11 @@
             cursor: pointer;
             background: var(--color-fondo);
             border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1 / 1;
+            min-height: 38px;
         }
         .diaLibre { background: green; color: #fff;border: 1px solid #000;}
 .diaPasado{
@@ -530,6 +542,67 @@
             position: relative;
             border: 1px solid #000;
         }
+        .contenidoModalAgenda, .contenidoModal {
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+        .contenidoModalAgenda .cta-button,
+        .contenidoModal .cta-button {
+            padding: 12px 16px;
+            font-size: 1rem;
+        }
+        /* Ajustes de accesibilidad y estética general */
+        .cta-button {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .cta-button:active {
+            transform: translateY(0);
+        }
+        .leyenda-calendario {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 8px 0 6px;
+            flex-wrap: wrap;
+        }
+        .leyenda-calendario .leyenda {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95em;
+        }
+        .leyenda-verde::before,
+        .leyenda-rojo::before,
+        .leyenda-gris::before {
+            content: "";
+            width: 14px;
+            height: 14px;
+            border: 1px solid #000;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .leyenda-verde::before { background: green; }
+        .leyenda-rojo::before { background: red; }
+        .leyenda-gris::before { background: #ccc; }
+
+        /* Ajustes finos para móviles muy pequeños */
+        @media (max-width: 420px) {
+            #horariosDisponibles {
+                grid-template-columns: 1fr;
+            }
+            #cuadroCalendario {
+                gap: 6px;
+            }
+            .diaCalendario {
+                padding: 6px;
+                font-size: 0.9em;
+                min-height: 34px;
+            }
+            .contenidoModalAgenda {
+                width: 96%;
+                padding: 12px;
+            }
+        }
         .cerrarModal {
             position: absolute;
             top: 10px;
@@ -538,19 +611,21 @@
             cursor: pointer;
         }
         .bloqueHora {
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
-            margin: 6px 0;
+            margin: 8px 0;
             font-weight: 700;
             cursor: pointer;
             text-align: center;
-            border: 1px solid #000;
+            border: 2px solid #000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            min-height: 48px;
+            font-size: 1.05em;
         }
 
 
         .horaLibre { background: var(--color-acento1); color: var(--color-texto-claro); }
-        .horaOcupada { background: #ff4d4d; color: var(--color-texto-claro); }
+        .horaOcupada { background: #ff4d4d; color: var(--color-texto-claro); border-color: #b30000; }
         .contenidoModal input {
             width: 100%;
             margin: 6px 0;
@@ -570,6 +645,57 @@
             background: linear-gradient(180deg, #ffffff, #f7f7f9);
             border: 1px solid #000;
             box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            max-width: 720px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        @keyframes breathe {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.015); }
+            100% { transform: scale(1); }
+        }
+        .cta-button { animation: breathe 6s ease-in-out infinite; }
+        .horaLibre, .diaLibre { animation: breathe 8s ease-in-out infinite; }
+        .toggle-hora.activo { animation: breathe 7s ease-in-out infinite; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes appearScale {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modalAgenda.activa { animation: fadeOverlay 200ms ease; }
+        .modalAgenda.activa .contenidoModalAgenda { animation: fadeInUp 280ms ease both; }
+        .modalBarberia { animation: fadeOverlay 200ms ease; }
+        .modalBarberia .contenidoModal { animation: fadeInUp 280ms ease both; }
+        .diaCalendario { transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease; }
+        .diaCalendario:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 14px rgba(0,0,0,0.18); }
+        .bloqueHora { transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease; }
+        .toggle-hora { transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease; }
+        .reserva-item { animation: appearScale 250ms ease both; }
+        #modal-hora-personalizada input {
+            width: 100%;
+            font-size: 1.1em;
+            padding: 14px;
+        }
+        #modal-hora-personalizada .cta-button {
+            padding: 14px 18px;
+            font-size: 1.05em;
+        }
+        #reservar-button {
+            display: block;
+            width: 100%;
+            padding: 16px 20px !important;
+            font-size: 1.1em;
+        }
+        .grupo-campo {
+            margin: 12px 0;
         }
     </style>
 </head>
@@ -756,7 +882,7 @@
                <br>
               
             </div>
-            <h2>Selecciona un día <H2 style="color: green;">DISPONIBLE</H2></h2>
+            <h2 style="margin:8px 0">Selecciona un día disponible (verde)</h2>
             <br>  <button id="mesAnterior" class="cta-button" style="padding:8px 12px; background-color: #34495E;">← Mes Anterior</button>        <button id="mesSiguiente" class="cta-button" style="padding:8px 12px">Mes Siguiente→</button>  <button id="desactivar-bloqueo" class="cta-button"  style="background-color: red; padding:8px 12px; display: none;" onclick="document.getElementById('desactivar-bloqueo').style.display = 'none';" >Desactivar bloqueo</button>
             <div class="dias-semana">
                 <div>Lun</div>
@@ -767,6 +893,11 @@
                 <div>Sáb</div>
                 <div>Dom</div>
             </div>
+            <div class="leyenda-calendario">
+                <span class="leyenda leyenda-verde">Verde: Disponible</span>
+                <span class="leyenda leyenda-rojo">Rojo: Ocupado/Cerrado</span>
+                <span class="leyenda leyenda-gris">Gris: Pasado</span>
+            </div>
             <div id="cuadroCalendario"></div>
  </div>
     </div>
@@ -775,6 +906,11 @@
             <span id="cerrarVentana" style="border: 1px solid #000; padding: 8px; border-radius: 20%; background-color: red; color: #fff;"  class="cerrarModal">Cerrar</span>
          <br>   <h3 id="tituloVentana"></h3>
             <h3>Selecciona la hora</h3>
+            <div class="leyenda-calendario" style="margin-bottom:8px">
+                <span class="leyenda leyenda-verde">Libre ✅</span>
+                <span class="leyenda leyenda-rojo">Ocupada ⛔</span>
+            </div>
+            <p style="text-align:center;margin:8px 0">Toca una hora verde para confirmar.</p>
             <div id="horariosDisponibles"></div>
         </div>
     </div>
@@ -782,20 +918,36 @@
     <form action="">
        <div id="modal-hora-personalizada" class="modalBarberia">
     <div class="contenidoModal">
-        <!-- Botón solo para cambiar día -->
-        <button type="button" id="cambiar-dia-btn" class="cta-button" style="padding:10px 16px">Cambiar Día</button>
-        <input disabled type="date" id="fecha" required>
+        <h3 style="text-align:center;margin-top:0">Confirmar tu reserva</h3>
+        
+        <div class="grupo-campo">
+            <label for="fecha">Día</label>
+            <input disabled type="date" id="fecha" required>
+            <div style="display:flex;justify-content:flex-end;margin-top:8px">
+                <button type="button" id="cambiar-dia-btn" class="cta-button">Cambiar Día</button>
+            </div>
+        </div>
 
-        <p>Se te redireccionará a <span style="color: green;">WhatsApp</span></p>
-      <label for="nombre">Nombre</label>  <input style="width: 280px;" type="text" placeholder="Escribe tu nombre" id="nombre">
-<br>
-        <!-- Input de hora -->
-        <input style="width: 90px;" type="text" id="hora" disabled>
+        <div class="grupo-campo">
+            <label for="hora">Hora</label>
+            <input type="text" id="hora" disabled>
+            <div style="display:flex;justify-content:flex-end;margin-top:8px">
+                <button id="cambiar-hora-btn" class="cta-button">Cambiar Hora</button>
+            </div>
+        </div>
 
-        <!-- Botón solo para cambiar hora -->
-        <button  id="cambiar-hora-btn" class="cta-button" style="padding:10px 16px">Cambiar Hora</button>
-<br><br>
-        <button  id="reservar-button" style="background-color: green !important;" type="button" class="cta-button">Agendar</button>
+        <div class="grupo-campo">
+            <label for="nombre">Nombre</label>
+            <input type="text" placeholder="Escribe tu nombre" id="nombre">
+        </div>
+
+        <div class="grupo-campo">
+            <label for="apellido">Apellido</label>
+            <input type="text" placeholder="Escribe tu apellido" id="apellido">
+        </div>
+
+        <button id="reservar-button" style="background-color: green !important;" type="button" class="cta-button">Agendar</button>
+        <p style="text-align:center;margin:10px 0 0">Se te redireccionará a <span style="color: green;">WhatsApp</span></p>
     </div>
 </div>
 <script>
@@ -811,6 +963,16 @@ document.getElementById("cambiar-hora-btn").addEventListener("click", function(e
  document.getElementById("modal-hora-personalizada").style.display = 'none';   e.preventDefault();
     // El handler se define más abajo de forma centralizada
 });
+
+// Deshabilitar "Agendar" si no hay nombre
+const reservarBtn = document.getElementById("reservar-button");
+const nombreInput = document.getElementById("nombre");
+if (reservarBtn && nombreInput) {
+    reservarBtn.disabled = !nombreInput.value.trim();
+    nombreInput.addEventListener("input", function() {
+        reservarBtn.disabled = this.value.trim().length === 0;
+    });
+}
 </script>
     </form>
     <div id="modal-reservada" class="modalBarberia">
@@ -954,7 +1116,7 @@ const firebaseConfig = {
             });
             actualizarBarraMes();
         });
-        function appendReservaToList({fecha, hora, nombre, key}) {
+        function appendReservaToList({fecha, hora, nombre, apellido, key}) {
             const cont = document.getElementById("listaReservas");
             if (!cont) return;
             const idBloque = `${fecha}-${hora}`;
@@ -964,7 +1126,8 @@ const firebaseConfig = {
             div.id = idBloque;
             div.dataset.order = new Date(`${fecha}T${hora}:00`).getTime();
             const texto = document.createElement("span");
-            texto.textContent = `📅 ${fecha} ⏰ ${hora} - ${nombre || ""}`;
+            const nombreCompleto = [nombre, apellido].filter(Boolean).join(" ");
+            texto.textContent = `📅 ${fecha} ⏰ ${hora} - ${nombreCompleto}`;
             const botonX = document.createElement("span");
             botonX.textContent = " | ❌";
             botonX.className = "boton-x";
@@ -987,7 +1150,7 @@ const firebaseConfig = {
         }
         reservasRef.on("child_added", snap => {
             const v = snap.val();
-            appendReservaToList({fecha: v.fecha, hora: v.hora, nombre: v.nombre, key: snap.key});
+            appendReservaToList({fecha: v.fecha, hora: v.hora, nombre: v.nombre, apellido: v.apellido, key: snap.key});
         });
         diasBloqueadosRef.on("value", snapshot => {
             diasBloqueados = [];
@@ -1148,6 +1311,7 @@ const firebaseConfig = {
 
         function enviarMensajeWhatsApp() {
             const nombre = document.getElementById("nombre")?.value.trim();
+            const apellido = document.getElementById("apellido")?.value.trim();
             const fecha = fechaInput.value;
             const hora = document.getElementById("hora").value;
             if (!nombre || !fecha || !hora) {
@@ -1155,12 +1319,14 @@ const firebaseConfig = {
                 return;
             }
             const numeroDestino = "56930273353";
-            const mensaje = `Hola, soy ${nombre}. Quiero reservar para el día ${fecha} a las ${hora}.`;
+            const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
+            const mensaje = `Hola, soy ${nombreCompleto}. Quiero reservar para el día ${fecha} a las ${hora}.`;
             const url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`;
             window.open(url, "_blank");
         }
         function reservarHora() {
             const nombre = document.getElementById("nombre")?.value.trim();
+            const apellido = document.getElementById("apellido")?.value.trim();
             const fecha = fechaInput.value;
             const hora = document.getElementById("hora").value;
             if (!fecha || !hora || !nombre) {
@@ -1178,7 +1344,7 @@ const firebaseConfig = {
                 if (ocupada) {
                     alert("La hora seleccionada ya está ocupada");
                 } else {
-                    ref.push({ fecha, hora, nombre }).then(() => {
+                    ref.push({ fecha, hora, nombre, apellido }).then(() => {
                         document.getElementById("modal-reservada").style.display = "block";
                         enviarMensajeWhatsApp();
                         setTimeout(() => {
