@@ -434,7 +434,7 @@ footer {
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
   margin-top: 12px;
-  color: var(--color-principal);
+  color: #000;
   font-weight: 700;
 }
 .dias-semana div {
